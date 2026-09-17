@@ -1,0 +1,33 @@
+services:
+  ubuntu-xrdp:
+    build:
+      context: container-image-systemd-ubuntu-xrdp
+      dockerfile: Containerfile
+    container_name: ubuntu-xrdp
+    hostname: ubuntu-xrdp
+    shm_size: '2gb'
+    privileged: true
+    cgroup: host
+    tty: true
+    ports:
+      - '52222:22/tcp'
+      - '53322:3322/tcp'
+      - '53389:3389/tcp'
+    tmpfs:
+      - /tmp
+      - /run
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - USER_NAME=user
+      - USER_PASSWORD=password
+      - USER_GROUPS=sudo
+      - USER_SHELL=/bin/bash
+      - USER_HOME=/home/user
+#    volumes:
+#      - ../user:/home/user
+    command: /bin/bash -c "
+      systemctl start sshd &&
+      systemctl start xrdp &&
+      read
+      "
